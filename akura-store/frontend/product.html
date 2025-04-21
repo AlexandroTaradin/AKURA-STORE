@@ -35,26 +35,52 @@
 
   <!-- Товар -->
   <main>
-    <section class="product-page">
+    <section class="product-container">
       <div class="product-image">
-        <img src="assets/img/bag-black.jpg" alt="Beep the Bat Bag">
+        <img src="assets/img/t-shirt-bkack.png" alt="Product Image" id="product-img">
       </div>
-      <div class="product-details">
-        <h1>"BEEP THE BAT" CROSSBODY BAG - BLACK</h1>
-        <p class="price">$115.00</p>
-
-        <button class="add-to-cart">Add to cart</button>
-
-        <div class="description">
-          <p>
-            Introducing the iconic AKURA crossbody bag – sleek, practical, and edgy.
-            Features unique bat figure, durable materials, and perfect size for essentials.
-          </p>
+  
+      <div class="product-info">
+        <h1 id="product-name">AKURA T-SHIRT BLACK</h1>
+        <p class="price" id="product-price">$35</p>
+  
+        <!-- Размеры -->
+        <div class="product-sizes">
+          <label>Size</label>
+          <div class="size-options">
+            <button class="size-btn">S</button>
+            <button class="size-btn">M</button>
+            <button class="size-btn">L</button>
+            <button class="size-btn active">XL</button>
+          </div>
         </div>
+  
+        <!-- Количество -->
+        <div class="product-quantity">
+          <label>Quantity</label>
+          <div class="quantity-control">
+            <button id="decrease">−</button>
+            <span id="qty">1</span>
+            <button id="increase">+</button>
+          </div>
+        </div>
+  
+        <!-- Кнопки -->
+        <button class="add-to-cart">Add to cart</button>
+        <button class="buy-now">Buy with Shop</button>
+  
+        <!-- Описание -->
+        <ul class="product-features" id="product-desc">
+          <li>Oversized fit</li>
+          <li>100% cotton 200gsm</li>
+          <li>Silkscreen printing</li>
+          <li>High quality rhinestones</li>
+        </ul>
       </div>
     </section>
   </main>
-
+  
+  
   <!-- Footer -->
   <footer>
     <p>
@@ -65,6 +91,14 @@
     </p>
     <p>developed by akura.team</p>
   </footer>
+
+
+<!--Подключния js и прочего... -->
+
+<script src="js/products.js"></script>
+<script src="js/product-page.js"></script>
+
+
 
 </body>
 </html>

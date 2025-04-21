@@ -27,29 +27,39 @@
   }
   
   header {
-    position: relative;
-    height: 80px;
     display: flex;
     align-items: center;
-    padding: 0 40px;
+    justify-content: space-between;
+    padding: 20px 40px;
+    position: relative;
   }
   
+  /* фиксируем логотип по центру */
   .logo {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
   }
   
-  .logo img.logo-img {
-    height: 80px;
-    width: auto;
-    object-fit: contain;
-    display: block;
+  .logo img {
+    max-height: 60px;
   }
   
-  .header-right {
-    margin-left: auto;
+  /* выравнивание пунктов меню справа */
+  .header-right ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
   }
+  
+  .header-right ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: 600;
+  }
+  
   
   nav ul {
     list-style: none;
@@ -100,14 +110,6 @@
     color: black;
     text-decoration: none;
     margin: 0 8px;
-  }
-  
-  .product-page {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    padding: 60px;
-    justify-content: center;
   }
   
   .product-image img {
@@ -245,3 +247,179 @@
     margin-bottom: 30px;
   }
   
+  a.product-card {
+    text-decoration: none; /* убрать подчёркивание */
+    color: black;           /* сделать текст чёрным */
+    display: block;         /* чтобы вся карточка была кликабельной */
+  }
+  
+  a.product-card:hover {
+    opacity: 0.9;           /* можно добавить лёгкий эффект при наведении */
+  }
+  
+
+ /* ------------------- SHOPIFY-STYLE PRODUCT PAGE ------------------- */
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 60px;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 40px;
+}
+
+.product-image img {
+  max-width: 400px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.product-info {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.product-info h1 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.product-sizes,
+.product-quantity {
+  margin-bottom: 20px;
+}
+
+.product-sizes label,
+.product-quantity label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.size-options {
+  display: flex;
+  gap: 10px;
+}
+
+.size-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  background: white;
+  color: black;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.size-btn:hover {
+  background: black;
+  color: white;
+  border-color: black;
+}
+
+.size-btn.active {
+  background: black;
+  color: white;
+  border-color: black;
+}
+
+
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  width: 100px;
+  height: 40px;
+  background: white;
+  padding: 0 8px;
+}
+
+.quantity-control button {
+  all: unset;
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 100%;
+  transition: 0.2s ease;
+}
+
+.quantity-control button:hover {
+  color: black;
+}
+
+.quantity-control span {
+  font-weight: 600;
+  font-size: 16px;
+  width: 24px;
+  text-align: center;
+}
+
+
+
+.quantity-control span {
+  width: 40px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 40px;
+}
+
+.add-to-cart {
+  width: 100%;
+  padding: 12px 0;
+  border: 1px solid black;
+  background: white;
+  color: black;
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.add-to-cart:hover {
+  background: black;
+  color: white;
+}
+
+.buy-now {
+  display: none;
+}
+
+
+.buy-now:hover {
+  opacity: 0.95;
+}
+
+.product-features {
+  list-style: disc;
+  padding-left: 20px;
+  font-size: 16px;
+  color: #333;
+}
+
+.size-btn,
+.quantity-control button,
+.add-to-cart {
+  cursor: pointer;
+}
