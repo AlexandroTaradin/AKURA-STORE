@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AKURA — Product</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+      <!-- шрифт гугловский-->
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- верхний футер (хедер)-->
+  <header>
+    <div class="header-left"></div>
+  
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/img/logoakura.png" alt="AKURA Logo" class="logo-img">
+      </a>
+    </div>
+  
+    <nav class="header-right">
+      <ul>
+        <li><a href="catalog.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contacts.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="cart.html">🛒</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+
+  <!-- Товар -->
+  <main>
+    <section class="product-container">
+      <div class="product-image">
+        <img src="assets/img/t-shirt-bkack.png" alt="Product Image" id="product-img">
+      </div>
+  
+      <div class="product-info">
+        <h1 id="product-name">AKURA T-SHIRT BLACK</h1>
+        <p class="price" id="product-price">$35</p>
+  
+        <!-- Размеры -->
+        <div class="product-sizes">
+          <label>Size</label>
+          <div class="size-options">
+            <button class="size-btn">S</button>
+            <button class="size-btn">M</button>
+            <button class="size-btn">L</button>
+            <button class="size-btn active">XL</button>
+          </div>
+        </div>
+  
+        <!-- Количество -->
+        <div class="product-quantity">
+          <label>Quantity</label>
+          <div class="quantity-control">
+            <button id="decrease">−</button>
+            <span id="qty">1</span>
+            <button id="increase">+</button>
+          </div>
+        </div>
+  
+        <!-- Кнопки -->
+        <button class="add-to-cart">Add to cart</button>
+        <button class="buy-now">Buy with Shop</button>
+  
+        <!-- Описание -->
+        <ul class="product-features" id="product-desc">
+          <li>Oversized fit</li>
+          <li>100% cotton 200gsm</li>
+          <li>Silkscreen printing</li>
+          <li>High quality rhinestones</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  
+  
+  <!-- Footer -->
+  <footer>
+    <p>
+      <a href="#">FAQS</a> |
+      <a href="#">SHIPPING</a> |
+      <a href="#">RETURNS</a> |
+      <a href="#">TERMS OF SERVICE</a>
+    </p>
+    <p>developed by akura.team</p>
+  </footer>
+
+
+<!--Подключния js и прочего... -->
+
+<script src="js/products.js"></script>
+<script src="js/product-page.js"></script>
+
+
+
+</body>
+</html>

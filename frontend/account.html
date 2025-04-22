@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account — AKURA</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Хедер -->
+  <header>
+    <div class="header-left"></div>
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/img/logoakura.png" alt="AKURA Logo" class="logo-img">
+      </a>
+    </div>
+    <nav class="header-right">
+      <ul>
+        <li><a href="catalog.html">Shop</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contacts.html">Contact</a></li>
+        <li><a href="login.html" id="loginLink">Login</a></li>
+        <li><a href="cart.html">🛒</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="account">
+      <h1>Welcome, <span id="username">User</span></h1>
+      <p>Email: <span id="useremail">user@example.com</span></p>
+
+      <h2>Change Password</h2>
+      <form onsubmit="changePassword(event)">
+        <input type="password" id="currentPassword" placeholder="Current password" required />
+        <input type="password" id="newPassword" placeholder="New password" required />
+        <button type="submit">Change Password</button>
+      </form>
+      
+
+      <h2>Your Orders</h2>
+      <ul>
+        <li>No orders yet.</li>
+        <li>Order #11 — $35.00 — Delivered</li>
+      </ul>
+
+      <button onclick="logout()">Logout</button>
+
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
