@@ -7,15 +7,13 @@ const product = products.find(p => p.id === productId);
 
 // Обновляем содержимое страницы
 if (product) {
-  // Изображение и текст
-  document.getElementById('product-img').src = product.image;
-  document.getElementById('product-img').alt = product.name;
+  // Обновляем название и цену
   document.getElementById('product-name').textContent = product.name;
   document.getElementById('product-price').textContent = `$${product.price}`;
 
-  // Описание (если оно массив — выводим по пунктам)
+  // Заполняем описание
   const descList = document.getElementById('product-desc');
-  descList.innerHTML = ''; // очистим
+  descList.innerHTML = '';
   if (Array.isArray(product.description)) {
     product.description.forEach(line => {
       const li = document.createElement('li');
@@ -27,6 +25,35 @@ if (product) {
     li.textContent = product.description;
     descList.appendChild(li);
   }
+
+  // Генерация картинок
+const imagesContainer = document.getElementById('productImages');
+imagesContainer.innerHTML = ''; // Очищаем
+
+product.images.forEach(image => {
+  if (image && image.trim() !== '') { 
+    const slide = document.createElement('div');
+    slide.className = 'swiper-slide';
+    slide.innerHTML = `<img src="${image}" alt="${product.name}">`;
+    imagesContainer.appendChild(slide);
+  }
+});
+
+// ИНИЦИАЛИЗИРУЕМ SWIPER ТОЛЬКО ПОСЛЕ ГЕНЕРАЦИИ!
+setTimeout(() => {
+new Swiper('.mySwiper', {
+  loop: true,
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  slidesPerView: 1,  // Одна картинка за раз
+});
+
+  
+  
+}, 0);
+
 
 } else {
   document.querySelector('main').innerHTML = '<p>Product not found.</p>';
