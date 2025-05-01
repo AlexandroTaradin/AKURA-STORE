@@ -6,71 +6,57 @@
 
   <title>AKURA STORE</title>
 
-  <!-- фав иконка для вкладки -->
   <link rel="icon" href="assets/img/logo-akura.ico" type="image/x-icon">
-
-  <!-- шрифт гугловский-->
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="css/style.css" />
+
+
 </head>
 <body>
-  <!-- верхний футер (хедер)-->
-    <header>
-        <div class="header-left"></div>
-      
-        <div class="logo">
-          <a href="index.html">
-            <img src="assets/img/logoakura.png" alt="AKURA Logo" class="logo-img">
-          </a>
-        </div>
-      
-        <nav class="header-right">
-          <ul>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contacts.html">Contact</a></li>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="cart.html">🛒</a></li>
-          </ul>
-        </nav>
-      </header>
-      
-      
-<!-- Карточки -->
-<main>
-  <section class="product-grid">
+  <header>
+    <div class="header-left"></div>
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/img/logoakura.png" alt="AKURA Logo" class="logo-img">
+      </a>
+    </div>
+    <nav class="header-right">
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contacts.html">Contact</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="cart.html">🛒</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <a href="product.html?id=1" class="product-card">
-      <img src="assets/img/hoodie black.png" alt="AKURA HOODIE BLACK">
-      <h3>AKURA HOODIE BLACK</h3>
-      <p>$75.00</p>
-    </a>
+  <!-- Карточки -->
+  <main>
+    <section class="product-grid" id="product-list">
+      <a href="product.html?id=1" class="product-card">
+        <img src="assets/img/hoodie black.png" alt="AKURA HOODIE BLACK">
+        <h3>AKURA HOODIE BLACK</h3>
+        <p>$75.00</p>
+      </a>
+      <a href="product.html?id=2" class="product-card">
+        <img src="assets/img/t-shirt-black.png" alt="AKURA T-SHIRT BLACK">
+        <h3>AKURA T-SHIRT BLACK</h3>
+        <p>$35.00</p>
+      </a>
+      <a href="product.html?id=3" class="product-card">
+        <img src="assets/img/shortsblack.png" alt="AKURA SHORTS BLACK">
+        <h3>AKURA SHORTS BLACK</h3>
+        <p>$35.00</p>
+      </a>
+      <a href="product.html?id=4" class="product-card">
+        <img src="assets/img/pantsblack.png" alt="AKURA PANTS BLACK">
+        <h3>AKURA PANTS BLACK</h3>
+        <p>$45.00</p>
+      </a>
+    </section>
+  </main>
 
-    <a href="product.html?id=2" class="product-card">
-      <img src="assets/img/t-shirt-black.png" alt="AKURA T-SHIRT BLACK">
-      <h3>AKURA T-SHIRT BLACK</h3>
-      <p>$35.00</p>
-    </a>
-
-    <a href="product.html?id=3" class="product-card">
-      <img src="assets/img/shortsblack.png" alt="AKURA SHORTS BLACK">
-      <h3>AKURA SHORTS BLACK</h3>
-      <p>$35.00</p>
-    </a>
-
-    <a href="product.html?id=4" class="product-card">
-      <img src="assets/img/pantsblack.png" alt="AKURA PANTS BLACK">
-      <h3>AKURA PANTS BLACK</h3>
-      <p>$45.00</p>
-    </a>
-
-  </section>
-</main>
-
-
-  
-
-  <!-- Футер нижний -->
+  <!-- Футер -->
   <footer>
     <p>
       <a href="#">FAQ</a> |
@@ -81,5 +67,85 @@
     <p>developed by akura.team</p>
   </footer>
 
+  <!-- 🔘 Кнопка фильтра -->
+  <div id="filter-button" onclick="toggleFilter()" title="Фильтр">🔍</div>
+
+  <!-- 🧾 Панель фильтрации -->
+  <div id="filter-panel">
+    <label>Категория:</label>
+    <select id="category">
+      <option value="">Все</option>
+      <option value="Худи">Худи</option>
+      <option value="Футболка">Футболка</option>
+      <option value="Шорты">Шорты</option>
+      <option value="Штаны">Штаны</option>
+    </select>
+
+    <label>Размер:</label>
+    <select id="size">
+      <option value="">Все</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+    </select>
+
+    <label>Цена:</label>
+    <select id="price">
+      <option value="">Все</option>
+      <option value="low">до 30€</option>
+      <option value="medium">30–60€</option>
+      <option value="high">больше 60€</option>
+    </select>
+
+    <button onclick="applyFilters()">Показать</button>
+  </div>
+
+  <!-- 🔧 JS -->
+  <script>
+    function toggleFilter() {
+      const panel = document.getElementById('filter-panel');
+      panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function applyFilters() {
+      const category = document.getElementById('category').value;
+      const size = document.getElementById('size').value;
+      const priceRange = document.getElementById('price').value;
+
+      fetch('http://localhost:3010/api/products/filter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, size, priceRange })
+      })
+      .then(res => res.json())
+      .then(products => {
+        const container = document.getElementById('product-list');
+        container.innerHTML = '';
+
+        if (products.length === 0) {
+          container.innerHTML = '<p>Нет подходящих товаров.</p>';
+          return;
+        }
+
+        products.forEach(p => {
+          const card = document.createElement('a');
+          card.href = `product.html?id=${p.id}`;
+          card.className = 'product-card';
+          card.innerHTML = `
+            <img src="${p.image_url}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>${p.price}€</p>
+          `;
+          container.appendChild(card);
+        });
+
+        toggleFilter();
+      })
+      .catch(err => {
+        alert('Ошибка фильтрации: ' + err);
+      });
+    }
+  </script>
 </body>
 </html>

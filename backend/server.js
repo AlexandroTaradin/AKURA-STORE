@@ -118,6 +118,43 @@ app.post('/api/change-password', async (req, res) => {
   }
 });
 
+// 📦 Фильтрация товаров
+app.post('/api/products/filter', (req, res) => {
+  const { category, size, priceRange } = req.body;
+
+  let query = 'SELECT * FROM products WHERE 1=1';
+  const values = [];
+
+  if (category) {
+    query += ' AND category = ?';
+    values.push(category);
+  }
+
+  if (size) {
+    query += ' AND size = ?';
+    values.push(size);
+  }
+
+  if (priceRange) {
+    if (priceRange === 'low') {
+      query += ' AND price < 30';
+    } else if (priceRange === 'medium') {
+      query += ' AND price BETWEEN 30 AND 60';
+    } else if (priceRange === 'high') {
+      query += ' AND price > 60';
+    }
+  }
+
+  db.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Ошибка фильтрации:', err);
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+    res.json(results);
+  });
+});
+
+
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
