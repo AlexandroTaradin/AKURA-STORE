@@ -15,6 +15,47 @@ document.addEventListener('DOMContentLoaded', () => {
     // 👤 Отображаем имя и email
     usernameEl.textContent = user.name || 'User';
     emailEl.textContent = user.email || 'unknown';
+
+
+    
+  // 📌 Получаем статус
+  fetch(`http://localhost:3010/api/user-status/${user.id}`)
+  .then(res => res.json())
+  .then(data => {
+    const { status, orderCount } = data;
+    const nextLevels = { Bronse: 5, Silver: 10, Gold: 15, Diamond: null };
+
+    const statusEl = document.getElementById('user-status');
+    statusEl.textContent = `(${status})`;
+
+    let tooltip = '';
+
+    if (status === 'Diamond') {
+      tooltip = 'Thank you for being our most loyal customer!';
+    } else {
+      const toNext = nextLevels[status] - orderCount;
+      const nextStatus = Object.keys(nextLevels)[Object.keys(nextLevels).indexOf(status) + 1];
+      tooltip = `Thank you for your purchases!\nOnly ${toNext} more to reach ${nextStatus} status.`;
+    }
+
+    tooltipText = tooltip;
+
+  });
+
+  const statusElement = document.getElementById('user-status');
+  const tooltip = document.getElementById('status-tooltip');
+  
+  statusElement.addEventListener('mouseenter', () => {
+    tooltip.textContent = tooltipText;
+    tooltip.style.display = 'block';
+  });
+  
+  statusElement.addEventListener('mouseleave', () => {
+    tooltip.style.display = 'none';
+  });
+  
+  
+
 // 📦 Загружаем заказы
 fetch('http://localhost:3010/api/orders', {
     headers: {
@@ -110,4 +151,4 @@ fetch('http://localhost:3010/api/orders', {
       alert('Server error');
     }
   }
-  
+

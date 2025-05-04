@@ -3,135 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  
 
   <title>AKURA STORE</title>
+
   <link rel="icon" href="assets/img/logo-akura.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
-</head>
 
+
+</head>
 <body>
   <div class="page-wrapper">
-
-    <header>
-      <div class="header-right"></div>
-      <div class="logo">
-        <a href="index.html">
-          <img src="assets/img/logoakura.png" alt="AKURA Logo" class="logo-img">
-        </a>
-      </div>
-      <nav class="header-right">
-        <ul>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contacts.html">Contact</a></li>
-          <li><a href="login.html" id="loginLink">Login</a></li>
-          <li><a href="cart.html">🛒</a></li>
-        </ul>
-      </nav>
-    </header>
-
-    <!-- 🔘 Кнопка фильтра -->
-    <div class="filter-bar">
-      <button id="openFilterBtn" class="filter-sort-btn">
-        FILTER BY & SORT BY
-        <svg class="filter-icon" xmlns="http://www.w3.org/2000/svg" height="18" width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="3" x2="2" y2="3"></line>
-          <line x1="16" y1="12" x2="2" y2="12"></line>
-          <line x1="10" y1="21" x2="2" y2="21"></line>
-        </svg>
-      </button>
+  
+  <header>
+    <div class="header-right"></div>
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/img/logoakura.png" alt="AKURA Logo" class="logo-img">
+      </a>
     </div>
+    <nav class="header-right">
+      <ul>
+        <li><a href="about.html">About</a></li>
+        <li><a href="contacts.html">Contact</a></li>
+        <li><a href="login.html" id="loginLink">Login</a></li>
+        <li><a href="cart.html">🛒</a></li>
+      </ul>
+    </nav>
+  </header>
 
-    <!-- 🛍️ Сетка товаров -->
+  <!-- Карточки -->
+
     <div id="product-container" class="products-grid"></div>
 
-    <!-- 📦 Футер -->
-    <footer>
-      <p>
-        <a href="#">FAQ</a> |
-        <a href="#">SHIPPING</a> |
-        <a href="#">RETURNS</a> |
-        <a href="#">TERMS OF SERVICE</a>
-      </p>
-      <p>developed by akura.team</p>
-    </footer>
+
+  </main>
+
+  <!-- Футер -->
+<footer>
+  <p>
+    <a href="faq.html">FAQ</a> |
+    <a href="shipping.html">SHIPPING</a> |
+    <a href="returns.html">RETURNS</a> |
+    <a href="terms.html">TERMS OF SERVICE</a>
+  </p>
+  <p>developed by akura.team</p>
+</footer>
+
+</div>
+</body>
+
+  <!-- 🔘 Кнопка фильтра -->
+  <div id="filter-button" onclick="toggleFilter()" title="Фильтр">🔍</div>
+
+  <!-- 🧾 Панель фильтрации -->
+  <div id="filter-panel">
+    <label>Категория:</label>
+    <select id="category">
+      <option value="">Все</option>
+      <option value="Худи">Худи</option>
+      <option value="Футболка">Футболка</option>
+      <option value="Шорты">Шорты</option>
+      <option value="Штаны">Штаны</option>
+    </select>
+
+    <label>Размер:</label>
+    <select id="size">
+      <option value="">Все</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+    </select>
+
+    <label>Цена:</label>
+    <select id="price">
+      <option value="">Все</option>
+      <option value="low">до 30€</option>
+      <option value="medium">30–60€</option>
+      <option value="high">больше 60€</option>
+    </select>
+
+    <button onclick="applyFilters()">Показать</button>
   </div>
 
- <!-- 🧾 Боковая панель фильтров -->
-<div id="filterPanel" class="filter-panel hidden">
-  <button id="closeFilterBtn" class="close-btn">×</button>
-
-  <h3>Sort By</h3>
-  <select id="sortSelect">
-    <option value="recommended">Recommended</option>
-    <option value="priceAsc">Price: Low to High</option>
-    <option value="priceDesc">Price: High to Low</option>
-  </select>
-
-  <h3>Category</h3>
-  <div class="filter-group" id="categoryFilters">
-    <label><input type="checkbox" value="Худи" /> Худи</label>
-    <label><input type="checkbox" value="Футболка" /> Футболка</label>
-    <label><input type="checkbox" value="Шорты" /> Шорты</label>
-    <label><input type="checkbox" value="Штаны" /> Штаны</label>
-  </div>
-
-  <!-- SIZE -->
-  <div class="filter-section">
-    <div class="filter-title" onclick="toggleFilterSection(this)">
-      <span>Size</span>
-      <span class="toggle-icon">−</span>
-    </div>
-    <div class="filter-group" id="sizeFilters">
-      <!-- Динамически заполняется JS -->
-    </div>
-  </div>
-
-  <!-- COLOUR -->
-  <div class="filter-section">
-    <div class="filter-title" onclick="toggleFilterSection(this)">
-      <span>Colour</span>
-      <span class="toggle-icon">−</span>
-    </div>
-    <div class="filter-group" id="colorFilters">
-      <!-- Динамически заполняется JS -->
-    </div>
-  </div>
-
-    <!-- PRICE -->
-    <div class="filter-section">
-      <div class="filter-title" onclick="toggleFilterSection(this)">
-        <span>Price</span>
-        <span class="toggle-icon">−</span>
-      </div>
-      <div class="filter-group" id="priceRangeWrapper">
-        <label>Min: €<span id="minPriceDisplay">0</span></label>
-        <input type="range" id="minPrice" min="0" step="1">
-        <label>Max: €<span id="maxPriceDisplay">100</span></label>
-        <input type="range" id="maxPrice" min="0" step="1">
-      </div>
-    </div>
-  
-    <!-- ✅ Кнопка применения фильтров -->
-    <button id="applyFiltersBtn" class="filter-apply-button">Apply Filters</button>
-  </div> <!-- Закрытие filterPanel -->
-  
-
-
-  <!-- 📜 Скрипты -->
+  <!-- 🔧 JS -->
   <script>
-    document.getElementById('openFilterBtn').addEventListener('click', () => {
-      document.getElementById('filterPanel').classList.add('show');
-    });
+    function toggleFilter() {
+      const panel = document.getElementById('filter-panel');
+      panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+    }
 
-    document.getElementById('closeFilterBtn').addEventListener('click', () => {
-      document.getElementById('filterPanel').classList.remove('show');
-    });
-    
+    function applyFilters() {
+      const category = document.getElementById('category').value;
+      const size = document.getElementById('size').value;
+      const priceRange = document.getElementById('price').value;
+
+      fetch('http://localhost:3010/api/products/filter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category, size, priceRange })
+      })
+      .then(res => res.json())
+      .then(products => {
+        const container = document.getElementById('product-container');
+        container.innerHTML = '';
+
+        if (products.length === 0) {
+          container.innerHTML = '<p>Нет подходящих товаров.</p>';
+          return;
+        }
+
+        products.forEach(p => {
+          const card = document.createElement('a');
+          card.href = `product.html?id=${p.id}`;
+          card.className = 'product-card';
+          card.innerHTML = `
+            <img src="${p.image_url}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>${p.price}€</p>
+          `;
+          container.appendChild(card);
+        });
+
+        toggleFilter();
+      })
+      .catch(err => {
+        alert('Ошибка фильтрации: ' + err);
+      });
+    }
   </script>
 
-  <script src="js/products.js"></script>
-  <script src="js/main.js"></script>
+<script src="js/products.js"></script>
+<script src="js/main.js"></script>
+
+
 </body>
 </html>

@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>My Profile — AKURA</title>
   <link rel="stylesheet" href="css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+      <!-- шрифт гугловский-->
+      <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
+
 </head>
 <body>
 
@@ -29,39 +31,54 @@
 
   <main>
     <section class="account">
-      <h1>Hello, <span id="username">User</span></h1>
-      <p>Email: <span id="useremail">user@example.com</span></p>
-
-      <div class="account-box">
-        <h2>Change Password</h2>
-        <form onsubmit="changePassword(event)">
-          <input type="password" id="currentPassword" placeholder="Current password" required />
-          <input type="password" id="newPassword" placeholder="New password" required />
-          <button type="submit">Change Password</button>
-        </form>
-      </div>
-
+      <h1 style="display: flex; align-items: center; gap: 10px; position: relative;">
+        Hello, <span id="username">User</span>
+        <span id="user-status" class="status-with-tooltip">(Bronse)</span>
+        <div id="status-tooltip" class="status-tooltip" style="display: none;"></div>
+      </h1>
+      
+      <!-- История заказов -->
       <div class="account-box">
         <h2>Order History</h2>
         <ul id="order-list">
           <li>Loading orders...</li>
         </ul>
       </div>
-
-      <button id="logoutBtn" onclick="logout()">Logout</button>
+      
+      <hr style="margin: 40px 0; border: none; border-top: 1px solid #ddd;" />
+      
+      <!-- Настройки аккаунта -->
+      <div class="account-box">
+        <h2>Account Settings</h2>
+        <p style="margin-bottom: 20px;">
+          <strong>Email:</strong> <span id="useremail">user@example.com</span>
+        </p>
+      
+        <h3 style="margin-bottom: 10px;">Change Password</h3>
+        <form onsubmit="changePassword(event)">
+          <input type="password" id="currentPassword" placeholder="Current password" required />
+          <input type="password" id="newPassword" placeholder="New password" required />
+          <button type="submit">Change Password</button>
+        </form>
+      
+        <!-- Кнопка выхода внутри блока -->
+        <button id="logoutBtn" onclick="logout()" class="logout-btn">Logout</button>
+      </div>
+      
+      
     </section>
   </main>
 
   <!-- ФУТЕР -->
-  <footer>
-    <p>
-      <a href="#">FAQ</a> |
-      <a href="#">SHIPPING</a> |
-      <a href="#">RETURNS</a> |
-      <a href="#">TERMS OF SERVICE</a>
-    </p>
-    <p>developed by akura.team</p>
-  </footer>
+<footer>
+  <p>
+    <a href="faq.html">FAQ</a> |
+    <a href="shipping.html">SHIPPING</a> |
+    <a href="returns.html">RETURNS</a> |
+    <a href="terms.html">TERMS OF SERVICE</a>
+  </p>
+  <p>developed by akura.team</p>
+</footer>
 
   <script src="js/account.js"></script>
   <script src="js/main.js"></script>

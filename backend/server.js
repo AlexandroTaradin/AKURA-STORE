@@ -10,6 +10,9 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = 3010;
 
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'frontend')));
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
@@ -126,51 +129,32 @@ app.post('/api/change-password', async (req, res) => {
 
 // 📦 Фильтрация товаров
 app.post('/api/products/filter', (req, res) => {
-  const {
-    categories = [],
-    sizes = [],
-    colors = [],
-    sortBy,
-    priceMin,
-    priceMax
-  } = req.body;
+  const { category, size, priceRange } = req.body;
 
-  let sql = 'SELECT * FROM products WHERE 1=1';
-  const params = [];
+  let query = 'SELECT * FROM products WHERE 1=1';
+  const values = [];
 
-  if (categories.length > 0) {
-    sql += ` AND category IN (${categories.map(() => '?').join(',')})`;
-    params.push(...categories);
+  if (category) {
+    query += ' AND category = ?';
+    values.push(category);
   }
 
-  if (sizes.length > 0) {
-    sql += ` AND size IN (${sizes.map(() => '?').join(',')})`;
-    params.push(...sizes);
+  if (size) {
+    query += ' AND size = ?';
+    values.push(size);
   }
 
-  if (colors.length > 0) {
-    sql += ` AND color IN (${colors.map(() => '?').join(',')})`;
-    params.push(...colors);
+  if (priceRange) {
+    if (priceRange === 'low') {
+      query += ' AND price < 30';
+    } else if (priceRange === 'medium') {
+      query += ' AND price BETWEEN 30 AND 60';
+    } else if (priceRange === 'high') {
+      query += ' AND price > 60';
+    }
   }
 
-  if (!isNaN(priceMin)) {
-    sql += ' AND price >= ?';
-    params.push(priceMin);
-  }
-  
-  if (!isNaN(priceMax)) {
-    sql += ' AND price <= ?';
-    params.push(priceMax);
-  }
-  
-
-  if (sortBy === 'priceAsc') {
-    sql += ' ORDER BY price ASC';
-  } else if (sortBy === 'priceDesc') {
-    sql += ' ORDER BY price DESC';
-  }
-
-  db.query(sql, params, (err, results) => {
+  db.query(query, values, (err, results) => {
     if (err) {
       console.error('Ошибка фильтрации:', err);
       return res.status(500).json({ message: 'Ошибка сервера' });
@@ -178,8 +162,6 @@ app.post('/api/products/filter', (req, res) => {
     res.json(results);
   });
 });
-
-
 
 // Получение списка товаров
 app.get('/api/products', (req, res) => {
@@ -315,49 +297,27 @@ app.get('/api/orders', (req, res) => {
   }
 });
 
-// 📊 Категории с количеством товаров
-app.get('/api/categories-with-count', (req, res) => {
-  const sql = `SELECT category, COUNT(*) as count FROM products GROUP BY category`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Ошибка получения категорий с количеством:', err);
-      return res.status(500).json({ message: 'Ошибка сервера' });
-    }
-    res.json(results); // Пример: [{ category: "Футболка", count: 5 }, ...]
-  });
-});
 
-// 📊 Размеры с количеством товаров
-app.get('/api/sizes-with-count', (req, res) => {
-  const sql = `SELECT size, COUNT(*) as count FROM products GROUP BY size`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Ошибка получения размеров с количеством:', err);
-      return res.status(500).json({ message: 'Ошибка сервера' });
-    }
-    res.json(results); // [{ size: 'S', count: 5 }, ...]
-  });
+
+app.get('/api/user-status/:id', async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const [rows] = await db.promise().query('SELECT COUNT(*) AS order_count FROM orders WHERE user_id = ?', [userId]);
+    const orderCount = rows[0].order_count;
+
+    let status = 'Bronse';
+    if (orderCount >= 15) status = 'Diamond';
+    else if (orderCount >= 10) status = 'Gold';
+    else if (orderCount >= 5) status = 'Silver';
+
+    res.json({ orderCount, status });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error getting status' });
+  }
 });
 
 
-// 🎨 Цвета с количеством товаров
-app.get('/api/colors-with-count', (req, res) => {
-  const sql = `SELECT color, COUNT(*) as count FROM products WHERE color IS NOT NULL GROUP BY color`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Ошибка получения цветов с количеством:', err);
-      return res.status(500).json({ message: 'Ошибка сервера' });
-    }
-    res.json(results); // [{ color: 'Black', count: 12 }, ...]
-  });
-});
-
-app.get('/api/products/price-range', (req, res) => {
-  db.query('SELECT MIN(price) AS min, MAX(price) AS max FROM products', (err, results) => {
-    if (err) return res.status(500).json({ error: 'Ошибка получения диапазона цен' });
-    res.json(results[0]);
-  });
-});
 
 
 
