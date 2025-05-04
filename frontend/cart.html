@@ -7,13 +7,14 @@
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+  <div class="page-wrapper">
 
       <!-- шрифт гугловский-->
   <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600&display=swap" rel="stylesheet">
 
   <!-- верхний футер (хедер)-->
   <header>
-    <div class="header-left"></div>
+    <div class="header-right"></div>
   
     <div class="logo">
       <a href="index.html">
@@ -23,34 +24,55 @@
   
     <nav class="header-right">
       <ul>
-        <li><a href="catalog.html">Shop</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="contacts.html">Contact</a></li>
-        <li><a href="login.html">Login</a></li>
+<li><a href="login.html" id="loginLink">Login</a></li>
+
         <li><a href="cart.html">🛒</a></li>
       </ul>
     </nav>
   </header>
   
 
-<main>
-  <section class="cart">
-    <h1>Your Cart</h1>
-    <p>Your cart is currently empty.</p>
-    <div class="cart-item">
-      <img src="assets/img/bag-black.jpg" alt="Product">
-      <div class="cart-info">
-        <h3>BEEP THE BAT BAG</h3>
-        <p>$115.00</p>
-        <button>Remove</button>
-      </div>
+  <main>
+    <div class="cart-page">
+      <section class="cart-items" id="cart-items">
+        <!-- Товары добавляются через JS -->
+      </section>
+  
+      <aside class="cart-summary">
+        <div class="promo-code">
+          <label for="promo">Promo Code</label>
+          <div class="promo-input">
+            <input type="text" id="promo" placeholder="Enter code">
+            <button onclick="applyPromo()">Apply</button>
+          </div>
+        </div>
+  
+        <div class="summary">
+          <p>Total: <span id="cart-total">0.00 €</span></p>
+          <a href="checkout.html" class="checkout-btn">Checkout</a>
+        </div>
+      </aside>
     </div>
-    <div class="cart-total">
-      <p>Total: $115.00</p>
-      <button class="checkout-btn">Checkout</button>
-    </div>
-  </section>
-</main>
+  </main>
+  
+
+  <!-- Футер -->
+  <footer>
+    <p>
+      <a href="#">FAQ</a> |
+      <a href="#">SHIPPING</a> |
+      <a href="#">RETURNS</a> |
+      <a href="#">TERMS OF SERVICE</a>
+    </p>
+    <p>developed by akura.team</p>
+  </footer>
+
+</div>
+</body>
+<script src="js/cart.js"></script>
+<script src="js/main.js"></script>
 
 </body>
 </html>

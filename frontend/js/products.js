@@ -1,58 +1,24 @@
-const products = [
-  {
-    id: 1,
-    name: 'AKURA HOODIE BLACK',
-    price: 75,
-    images: [
-      'assets/img/hoodie black.png',
-      'assets/img/hoodie black.png',
-      'assets/img/hoodie black.png'
-    ],
-    description: [
-      'Premium black hoodie with AKURA branding.',
-      'Perfect for urban looks.'
-    ]
-  },
-  {
-    id: 2,
-    name: 'AKURA T-SHIRT BLACK',
-    price: 35,
-    images: [
-      'assets/img/t-shirt-black.png',
-      'assets/img/t-shirt-black2.png'
-    ],
-    description: [
-      'Oversized fit',
-      '100% cotton 200gsm',
-      'Silkscreen printing',
-      'High quality rhinestones'
-    ]
-  },
-  {
-    id: 3,
-    name: 'AKURA SHORTS BLACK',
-    price: 35,
-    images: [
-      'assets/img/shortsblack.png'
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('http://localhost:3010/api/products')
+    .then(response => response.json())
+    .then(products => {
+      const container = document.getElementById('product-container');
+      container.innerHTML = '';
+
+      products.forEach(product => {
+        const productCard = document.createElement('a');
+        productCard.classList.add('product-card');
+        productCard.href = `product.html?id=${product.id}`;
+        productCard.innerHTML = `
+        <img src="${product.image_url}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <span>${product.price} €</span>
+      `;
       
-    ],
-    description: [
-      'Relaxed black shorts',
-      'Perfect for daily wear',
-      'Soft cotton blend'
-    ]
-  },
-  {
-    id: 4,
-    name: 'AKURA PANTS BLACK',
-    price: 45,
-    images: [
-      'assets/img/pantsblack.png'
-    ],
-    description: [
-      'Relaxed fit black pants',
-      'Clean silhouette',
-      'Urban-inspired design'
-    ]
-  }
-];
+        container.appendChild(productCard);
+      });
+    })
+    .catch(error => {
+      console.error('Ошибка загрузки товаров:', error);
+    });
+});
