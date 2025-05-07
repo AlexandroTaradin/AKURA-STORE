@@ -297,8 +297,6 @@ app.get('/api/orders', (req, res) => {
   }
 });
 
-
-
 app.get('/api/user-status/:id', async (req, res) => {
   const userId = req.params.id;
   try {
@@ -317,9 +315,99 @@ app.get('/api/user-status/:id', async (req, res) => {
   }
 });
 
+// Получить всех пользователей
+app.get('/api/users', (req, res) => {
+  db.query(
+    'SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC',
+    (err, results) => {
+      if (err) {
+        console.error('Ошибка при получении пользователей:', err);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json(results);
+    }
+  );
+});
 
+// Обновить пользователя
+app.put('/api/users/:id', (req, res) => {
+  const userId = req.params.id;
+  const { name, email, role } = req.body;
+  db.query(
+    'UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?',
+    [name, email, role, userId],
+    (err, result) => {
+      if (err) {
+        console.error('Ошибка обновления пользователя:', err);
+        return res.status(500).json({ message: 'Ошибка сервера' });
+      }
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'Пользователь не найден' });
+      }
+      res.json({ message: 'Пользователь успешно обновлён' });
+    }
+  );
+});
 
+// Удалить пользователя
+app.delete('/api/users/:id', (req, res) => {
+  const userId = req.params.id;
+  db.query(
+    'DELETE FROM users WHERE id = ?',
+    [userId],
+    (err, result) => {
+      if (err) {
+        console.error('Ошибка удаления пользователя:', err);
+        return res.status(500).json({ error: err.message });
+      }
+      res.json({ message: 'Пользователь удалён' });
+    }
+  );
+});
 
+// Получить все промокоды
+app.get('/api/promocodes', (req, res) => {
+  db.query('SELECT * FROM promo_codes ORDER BY created_at DESC', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+// Создать новый промокод
+app.post('/api/promocodes', (req, res) => {
+  const { code, discount } = req.body;
+  db.query(
+    'INSERT INTO promo_codes (code, discount) VALUES (?, ?)',
+    [code, discount],
+    (err, result) => {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).json({ message: 'Такой код уже существует' });
+        }
+        return res.status(500).json({ error: err.message });
+      }
+      res.status(201).json({ id: result.insertId, code, discount });
+    }
+  );
+});
+
+// Удалить промокод
+app.delete('/api/promocodes/:id', (req, res) => {
+  db.query('DELETE FROM promo_codes WHERE id = ?', [req.params.id], (err) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ message: 'Промокод удалён' });
+  });
+});
+
+// Проверить промокод по его строке
+app.get('/api/promocodes/validate/:code', (req, res) => {
+  const code = req.params.code;
+  db.query('SELECT * FROM promo_codes WHERE code = ?', [code], (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    if (results.length === 0) return res.status(404).json({ message: 'Код не найден' });
+    res.json(results[0]);
+  });
+});
 
 // Запуск сервера
 app.listen(PORT, () => {

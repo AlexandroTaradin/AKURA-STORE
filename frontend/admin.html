@@ -22,10 +22,10 @@
       <nav>
         <ul>
           <li><a href="#" id="products-tab">🧥 Товары</a></li>
-          <li><a href="#" id="#">📦 Заказы</a></li>
-          <li><a href="#" id="user-tab">👥 Пользователи</a></li>
-          <li><a href="#" id="#">💸 Промокоды</a></li>
-          <li><a href="#" id="#">📊 Отчёты</a></li>
+          <li><a href="#" id="order-tab">📦 Заказы</a></li>
+          <li><a href="#" id="users-tab">👥 Пользователи</a></li>
+          <li><a href="#" id="promo-tab">💸 Промокоды</a></li>
+          <li><a href="#" id="stat-tab">📊 Отчёты</a></li>
         </ul>
       </nav>
     </div>
@@ -111,7 +111,81 @@
 </div>
 </div>
 
+<!-- Секция списка пользователей -->
+<div id="user-list-section" style="display:none;">
+  <h2>Список пользователей</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Почта</th>
+        <th>Статус аккаунта</th>
+        <th>Роль</th>
+        <th>Дата регистрации</th>
+        <th>Управление</th>
+      </tr>
+    </thead>
+    <tbody id="users-table-body">
+      <!-- Пользователи будут вставляться сюда через JS -->
+    </tbody>
+  </table>
+</div>
 
+<!-- Модальное окно для редактирования пользователя -->
+<div id="user-edit-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close user-edit-close">&times;</span>
+    <h2>Редактирование пользователя</h2>
+    <form id="user-edit-form">
+      <input type="hidden" id="user-edit-id" name="id">
+      <div class="form-group">
+        <label for="user-edit-name">Имя</label>
+        <input type="text" id="user-edit-name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="user-edit-email">Почта</label>
+        <input type="email" id="user-edit-email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="user-edit-role">Роль</label>
+        <select id="user-edit-role" name="role">
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+          <option value="User">User</option>
+        </select>
+      </div>
+      <button type="submit">Сохранить</button>
+    </form>
+  </div>
+</div>
+</div>
+
+<!-- Секция промокодов -->
+<div id="promo-list-section" style="display:none;">
+  <h2>Промокоды</h2>
+
+  <!-- Форма создания -->
+  <div class="promo-create">
+    <input type="text" id="new-promo-code" placeholder="Код, например SPRING10">
+    <input type="number" id="new-promo-discount" placeholder="% скидки" min="1" max="100">
+    <button id="create-promo-btn">Создать</button>
+  </div>
+
+  <!-- Таблица существующих -->
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Код</th>
+        <th>Скидка (%)</th>
+        <th>Создан</th>
+        <th>Управление</th>
+      </tr>
+    </thead>
+    <tbody id="promo-table-body"></tbody>
+  </table>
+</div>
 
   <script src="js/admin.js"></script>
 </body>
