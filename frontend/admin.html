@@ -22,10 +22,10 @@
       <nav>
         <ul>
           <li><a href="#" id="products-tab">🧥 Товары</a></li>
-          <li><a href="#" id="order-tab">📦 Заказы</a></li>
           <li><a href="#" id="users-tab">👥 Пользователи</a></li>
+          <li><a href="#" id="order-tab">📦 Заказы</a></li>
           <li><a href="#" id="promo-tab">💸 Промокоды</a></li>
-          <li><a href="#" id="stat-tab">📊 Отчёты</a></li>
+          <li><a href="#" id="archive-tab">📦 Архив</a></li>
         </ul>
       </nav>
     </div>
@@ -45,6 +45,7 @@
           <th>Описание</th>
           <th>Изображение</th>
           <th>Управление</th>
+          <th> <button class="btn-add" onclick="openModal()">+</button> </th>
         </tr>
       </thead>
       <tbody id="products-table-body">
@@ -184,6 +185,50 @@
       </tr>
     </thead>
     <tbody id="promo-table-body"></tbody>
+  </table>
+</div>
+
+<!-- Заказы -->
+<div id="order-list-section" style="display:none;">
+  <h2>Заказы</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Почта</th>
+        <th>Адрес</th>
+        <th>Город</th>
+        <th>ZIP</th>
+        <th>Доставка</th>
+        <th>Товары</th>
+        <th>Дата</th>
+        <th>Статус</th>
+        <th>Управление</th>
+      </tr>
+    </thead>
+    <tbody id="orders-table-body"></tbody>
+  </table>
+</div>
+
+<!-- Архив -->
+<div id="archive-list-section" style="display:none;">
+  <h2>Архив</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Почта</th>
+        <th>Адрес</th>
+        <th>Город</th>
+        <th>ZIP</th>
+        <th>Доставка</th>
+        <th>Товары</th>
+        <th>Дата</th>
+      </tr>
+    </thead>
+    <tbody id="archive-table-body"></tbody>
   </table>
 </div>
 

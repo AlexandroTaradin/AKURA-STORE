@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Май 07 2025 г., 12:39
+-- Время создания: Май 07 2025 г., 21:55
 -- Версия сервера: 10.4.32-MariaDB
 -- Версия PHP: 8.2.12
 
@@ -37,19 +37,21 @@ CREATE TABLE `orders` (
   `delivery_method` varchar(50) DEFAULT NULL,
   `items` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`items`)),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `user_id` int(11) DEFAULT NULL
+  `user_id` int(11) DEFAULT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'Новый',
+  `archived` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Дамп данных таблицы `orders`
 --
 
-INSERT INTO `orders` (`id`, `full_name`, `email`, `address`, `city`, `zip`, `delivery_method`, `items`, `created_at`, `user_id`) VALUES
-(5, 'Test', 'ifsshfhsh@gmail.com', 'fsjksjll', 'fsfa', '35453', 'Courier', '[{\"id\":\"3\",\"name\":\"AKURA SHORTS BLACK\",\"price\":35,\"quantity\":1,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/shortsblack.png\",\"size\":\"XL\"}]', '2025-05-04 18:47:13', 5),
-(6, 'Oleksandr Taradin', 'taradin@gmail.com', 'Narva,Tempo 19/2', 'Narva', '5333', 'Courier', '[{\"id\":\"4\",\"name\":\"AKURA T-SHIRT BLACK\",\"price\":35,\"quantity\":4,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/t-shirt-black.png\",\"size\":\"XL\"},{\"id\":\"4\",\"name\":\"AKURA T-SHIRT BLACK\",\"price\":35,\"quantity\":2,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/t-shirt-black.png\",\"size\":\"L\"}]', '2025-05-04 19:15:34', 5),
-(7, 'Tdaada', 'dad@gmail.com', 'kjfshfjksha', 'Narva', '425525', 'Pickup', '[{\"id\":\"4\",\"name\":\"AKURA T-SHIRT BLACK\",\"price\":35,\"quantity\":3,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/t-shirt-black.png\",\"size\":\"M\"}]', '2025-05-04 19:24:55', NULL),
-(8, 'Jegor Jakovlev', 'tetst@gmail.com', 'Narva Astri', 'Narca', '2442242', 'Pickup', '[{\"id\":\"3\",\"name\":\"AKURA SHORTS BLACK\",\"price\":35,\"quantity\":1,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/shortsblack.png\",\"size\":\"L\"}]', '2025-05-04 19:37:09', 5),
-(0, 'Artem', 'admin@it.com', 'krenholmi 34', 'narva', '40122', 'Courier', '[{\"id\":\"1\",\"name\":\"AKURA HOODIE BLACK\",\"price\":75,\"quantity\":1,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/hoodie%20black.png\",\"size\":\"L\"}]', '2025-05-06 19:00:23', 6);
+INSERT INTO `orders` (`id`, `full_name`, `email`, `address`, `city`, `zip`, `delivery_method`, `items`, `created_at`, `user_id`, `status`, `archived`) VALUES
+(5, 'Test', 'ifsshfhsh@gmail.com', 'fsjksjll', 'fsfa', '35453', 'Courier', '[{\"id\":\"3\",\"name\":\"AKURA SHORTS BLACK\",\"price\":35,\"quantity\":1,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/shortsblack.png\",\"size\":\"XL\"}]', '2025-05-04 18:47:13', 5, 'Подтверждён', 1),
+(6, 'Oleksandr Taradin', 'taradin@gmail.com', 'Narva,Tempo 19/2', 'Narva', '5333', 'Courier', '[{\"id\":\"4\",\"name\":\"AKURA T-SHIRT BLACK\",\"price\":35,\"quantity\":4,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/t-shirt-black.png\",\"size\":\"XL\"},{\"id\":\"4\",\"name\":\"AKURA T-SHIRT BLACK\",\"price\":35,\"quantity\":2,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/t-shirt-black.png\",\"size\":\"L\"}]', '2025-05-04 19:15:34', 5, 'Оформлен возврат', 1),
+(7, 'Tdaada', 'dad@gmail.com', 'kjfshfjksha', 'Narva', '425525', 'Pickup', '[{\"id\":\"4\",\"name\":\"AKURA T-SHIRT BLACK\",\"price\":35,\"quantity\":3,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/t-shirt-black.png\",\"size\":\"M\"}]', '2025-05-04 19:24:55', NULL, 'Отменён', 1),
+(8, 'Jegor Jakovlev', 'tetst@gmail.com', 'Narva Astri', 'Narca', '2442242', 'Pickup', '[{\"id\":\"3\",\"name\":\"AKURA SHORTS BLACK\",\"price\":35,\"quantity\":1,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/shortsblack.png\",\"size\":\"L\"}]', '2025-05-04 19:37:09', 5, 'Готовится к отправке', 1),
+(0, 'Artem', 'admin@it.com', 'krenholmi 34', 'narva', '40122', 'Courier', '[{\"id\":\"1\",\"name\":\"AKURA HOODIE BLACK\",\"price\":75,\"quantity\":1,\"image_url\":\"http://127.0.0.1:5500/frontend/assets/img/hoodie%20black.png\",\"size\":\"L\"}]', '2025-05-06 19:00:23', 6, 'Новый', 1);
 
 -- --------------------------------------------------------
 
@@ -88,6 +90,14 @@ CREATE TABLE `promo_codes` (
   `discount` decimal(5,2) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `promo_codes`
+--
+
+INSERT INTO `promo_codes` (`id`, `code`, `discount`, `created_at`) VALUES
+(4, 'SECRET', 25.00, '2025-05-07 19:13:35'),
+(5, 'KSYSHA', 55.00, '2025-05-07 19:20:44');
 
 -- --------------------------------------------------------
 
@@ -149,7 +159,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT для таблицы `promo_codes`
 --
 ALTER TABLE `promo_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT для таблицы `users`

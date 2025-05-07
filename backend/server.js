@@ -409,6 +409,53 @@ app.get('/api/promocodes/validate/:code', (req, res) => {
   });
 });
 
+// Получить все активные (не в архиве) заказы
+app.get('/api/admin/orders', (req, res) => {
+  db.query(
+    'SELECT * FROM orders WHERE archived = 0 ORDER BY created_at DESC',
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    }
+  );
+});
+
+// Получить все архивные заказы
+app.get('/api/admin/orders/archive', (req, res) => {
+  db.query(
+    'SELECT * FROM orders WHERE archived = 1 ORDER BY created_at DESC',
+    (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    }
+  );
+});
+
+// Изменить статус заказа
+app.put('/api/admin/orders/:id/status', (req, res) => {
+  const { status } = req.body;
+  db.query(
+    'UPDATE orders SET status = ? WHERE id = ?',
+    [status, req.params.id],
+    err => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Статус обновлён' });
+    }
+  );
+});
+
+// Переместить заказ в архив
+app.put('/api/admin/orders/:id/archive', (req, res) => {
+  db.query(
+    'UPDATE orders SET archived = 1 WHERE id = ?',
+    [req.params.id],
+    err => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json({ message: 'Заказ в архиве' });
+    }
+  );
+});
+
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

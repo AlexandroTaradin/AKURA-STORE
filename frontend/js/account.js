@@ -16,8 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     usernameEl.textContent = user.name || 'User';
     emailEl.textContent = user.email || 'unknown';
 
-
-    
   // 📌 Получаем статус
   fetch(`http://localhost:3010/api/user-status/${user.id}`)
   .then(res => res.json())
