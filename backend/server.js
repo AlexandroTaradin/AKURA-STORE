@@ -11,7 +11,6 @@ const app = express();
 const PORT = 3010;
 
 const path = require('path');
-app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Middleware
 app.use(cors());
@@ -129,32 +128,51 @@ app.post('/api/change-password', async (req, res) => {
 
 // 📦 Фильтрация товаров
 app.post('/api/products/filter', (req, res) => {
-  const { category, size, priceRange } = req.body;
+  const {
+    categories = [],
+    sizes = [],
+    colors = [],
+    sortBy,
+    priceMin,
+    priceMax
+  } = req.body;
 
-  let query = 'SELECT * FROM products WHERE 1=1';
-  const values = [];
+  let sql = 'SELECT * FROM products WHERE 1=1';
+  const params = [];
 
-  if (category) {
-    query += ' AND category = ?';
-    values.push(category);
+  if (categories.length > 0) {
+    sql += ` AND category IN (${categories.map(() => '?').join(',')})`;
+    params.push(...categories);
   }
 
-  if (size) {
-    query += ' AND size = ?';
-    values.push(size);
+  if (sizes.length > 0) {
+    sql += ` AND size IN (${sizes.map(() => '?').join(',')})`;
+    params.push(...sizes);
   }
 
-  if (priceRange) {
-    if (priceRange === 'low') {
-      query += ' AND price < 30';
-    } else if (priceRange === 'medium') {
-      query += ' AND price BETWEEN 30 AND 60';
-    } else if (priceRange === 'high') {
-      query += ' AND price > 60';
-    }
+  if (colors.length > 0) {
+    sql += ` AND color IN (${colors.map(() => '?').join(',')})`;
+    params.push(...colors);
   }
 
-  db.query(query, values, (err, results) => {
+  if (!isNaN(priceMin)) {
+    sql += ' AND price >= ?';
+    params.push(priceMin);
+  }
+  
+  if (!isNaN(priceMax)) {
+    sql += ' AND price <= ?';
+    params.push(priceMax);
+  }
+  
+
+  if (sortBy === 'priceAsc') {
+    sql += ' ORDER BY price ASC';
+  } else if (sortBy === 'priceDesc') {
+    sql += ' ORDER BY price DESC';
+  }
+
+  db.query(sql, params, (err, results) => {
     if (err) {
       console.error('Ошибка фильтрации:', err);
       return res.status(500).json({ message: 'Ошибка сервера' });
@@ -174,19 +192,6 @@ app.get('/api/products', (req, res) => {
   });
 });
 
-app.get('/api/products/:id', (req, res) => {
-  const productId = req.params.id;
-  db.query('SELECT * FROM products WHERE id = ?', [productId], (err, results) => {
-    if (err) {
-      console.error('Ошибка получения товара:', err);
-      res.status(500).json({ error: 'Ошибка сервера' });
-    } else if (results.length === 0) {
-      res.status(404).json({ error: 'Товар не найден' });
-    } else {
-      res.json(results[0]);
-    }
-  });
-});
 
 
 // Удалить товар
@@ -456,7 +461,67 @@ app.put('/api/admin/orders/:id/archive', (req, res) => {
   );
 });
 
+// 📊 Категории с количеством товаров
+app.get('/api/categories-with-count', (req, res) => {
+  const sql = `SELECT category, COUNT(*) as count FROM products GROUP BY category`;
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Ошибка получения категорий с количеством:', err);
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+    res.json(results); // Пример: [{ category: "Футболка", count: 5 }, ...]
+  });
+});
+
+// 📊 Размеры с количеством товаров
+app.get('/api/sizes-with-count', (req, res) => {
+  const sql = `SELECT size, COUNT(*) as count FROM products GROUP BY size`;
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Ошибка получения размеров с количеством:', err);
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+    res.json(results); // [{ size: 'S', count: 5 }, ...]
+  });
+});
+
+
+// 🎨 Цвета с количеством товаров
+app.get('/api/colors-with-count', (req, res) => {
+  const sql = `SELECT color, COUNT(*) as count FROM products WHERE color IS NOT NULL GROUP BY color`;
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Ошибка получения цветов с количеством:', err);
+      return res.status(500).json({ message: 'Ошибка сервера' });
+    }
+    res.json(results); // [{ color: 'Black', count: 12 }, ...]
+  });
+});
+
+app.get('/api/products/price-range', (req, res) => {
+  db.query('SELECT MIN(price) AS min, MAX(price) AS max FROM products', (err, results) => {
+    if (err) return res.status(500).json({ error: 'Ошибка получения диапазона цен' });
+    res.json(results[0]);
+  });
+});
+
+app.get('/api/products/:id', (req, res) => {
+  const productId = req.params.id;
+  db.query('SELECT * FROM products WHERE id = ?', [productId], (err, results) => {
+    if (err) {
+      console.error('Ошибка получения товара:', err);
+      res.status(500).json({ error: 'Ошибка сервера' });
+    } else if (results.length === 0) {
+      res.status(404).json({ error: 'Товар не найден' });
+    } else {
+      res.json(results[0]);
+    }
+  });
+});
+
+
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
