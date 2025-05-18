@@ -11,6 +11,7 @@ const app = express();
 const PORT = 3010;
 
 const path = require('path');
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 // Middleware
 app.use(cors());
@@ -192,7 +193,33 @@ app.get('/api/products', (req, res) => {
   });
 });
 
+app.get('/api/products/:id', (req, res) => {
+  const productId = req.params.id;
+  db.query('SELECT * FROM products WHERE id = ?', [productId], (err, results) => {
+    if (err) {
+      console.error('Ошибка получения товара:', err);
+      res.status(500).json({ error: 'Ошибка сервера' });
+    } else if (results.length === 0) {
+      res.status(404).json({ error: 'Товар не найден' });
+    } else {
+      res.json(results[0]);
+    }
+  });
+});
 
+app.get('/api/categories', (req, res) => {
+  db.query('SELECT id, name FROM categories ORDER BY name', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
+app.get('/api/sizes', (req, res) => {
+  db.query('SELECT id, name FROM sizes ORDER BY id', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
 
 // Удалить товар
 app.delete('/api/products/:id', (req, res) => {
@@ -208,18 +235,35 @@ app.delete('/api/products/:id', (req, res) => {
 // ✏️ Обновление товара
 app.put('/api/products/:id', (req, res) => {
   const productId = req.params.id;
-  const { name, category, size, price, description } = req.body;
+  const { name, category_id, size_id, price, description, image_url } = req.body;
 
   const sql = `
     UPDATE products
-       SET name = ?, category = ?, size = ?, price = ?, description = ?
+       SET name = ?, 
+           category_id = ?, 
+           size_id = ?, 
+           price = ?, 
+           description = ?,
+           image_url = ?
      WHERE id = ?`;
-  const params = [name, category, size, price, description, productId];
+  
+  const params = [
+    name, 
+    category_id || null, 
+    size_id || null, 
+    price, 
+    description || null,
+    image_url || null,
+    productId
+  ];
 
   db.query(sql, params, (err, result) => {
     if (err) {
       console.error('Ошибка обновления товара:', err);
-      return res.status(500).json({ message: 'Ошибка сервера при обновлении товара' });
+      return res.status(500).json({ 
+        message: 'Ошибка сервера при обновлении товара',
+        error: err.message // Добавляем детали ошибки
+      });
     }
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: 'Товар не найден' });
@@ -273,9 +317,6 @@ app.post('/api/orders', (req, res) => {
     res.json({ orderId: result.insertId });
   });
 });
-
-
-
 
 // 📦 Получить заказы по userId
 app.get('/api/orders', (req, res) => {
@@ -461,67 +502,81 @@ app.put('/api/admin/orders/:id/archive', (req, res) => {
   );
 });
 
-// 📊 Категории с количеством товаров
-app.get('/api/categories-with-count', (req, res) => {
-  const sql = `SELECT category, COUNT(*) as count FROM products GROUP BY category`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Ошибка получения категорий с количеством:', err);
-      return res.status(500).json({ message: 'Ошибка сервера' });
+// Создать новый товар
+app.post('/api/products', (req, res) => {
+  const { name, price, category_id, size_id, image_url, description } = req.body;
+  const sql = `
+    INSERT INTO products 
+      (name, price, category_id, size_id, image_url, description)
+    VALUES (?, ?, ?, ?, ?, ?)
+  `;
+  db.query(sql, [name, price, category_id, size_id, image_url, description], (err, result) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json({ id: result.insertId });
+  });
+});
+
+// Восстановление заказа из архива
+app.put('/api/admin/orders/:id/restore', (req, res) => {
+  const orderId = req.params.id;
+  db.query(
+    'UPDATE orders SET archived = 0 WHERE id = ?',
+    [orderId],
+    (err, result) => {
+      if (err) {
+        console.error('Ошибка восстановления заказа:', err);
+        return res.status(500).json({ 
+          success: false,
+          error: 'Внутренняя ошибка сервера'
+        });
+      }
+      
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Заказ не найден'
+        });
+      }
+      
+      res.json({ 
+        success: true,
+        message: 'Заказ восстановлен'
+      });
     }
-    res.json(results); // Пример: [{ category: "Футболка", count: 5 }, ...]
-  });
+  );
 });
 
-// 📊 Размеры с количеством товаров
-app.get('/api/sizes-with-count', (req, res) => {
-  const sql = `SELECT size, COUNT(*) as count FROM products GROUP BY size`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Ошибка получения размеров с количеством:', err);
-      return res.status(500).json({ message: 'Ошибка сервера' });
+// Полное удаление заказа
+app.delete('/api/admin/orders/:id', (req, res) => {
+  const orderId = req.params.id;
+  db.query(
+    'DELETE FROM orders WHERE id = ?',
+    [orderId],
+    (err, result) => {
+      if (err) {
+        console.error('Ошибка удаления заказа:', err);
+        return res.status(500).json({
+          success: false,
+          error: 'Внутренняя ошибка сервера'
+        });
+      }
+      
+      if (result.affectedRows === 0) {
+        return res.status(404).json({
+          success: false,
+          error: 'Заказ не найден'
+        });
+      }
+      
+      res.json({
+        success: true,
+        message: 'Заказ удален'
+      });
     }
-    res.json(results); // [{ size: 'S', count: 5 }, ...]
-  });
+  );
 });
-
-
-// 🎨 Цвета с количеством товаров
-app.get('/api/colors-with-count', (req, res) => {
-  const sql = `SELECT color, COUNT(*) as count FROM products WHERE color IS NOT NULL GROUP BY color`;
-  db.query(sql, (err, results) => {
-    if (err) {
-      console.error('Ошибка получения цветов с количеством:', err);
-      return res.status(500).json({ message: 'Ошибка сервера' });
-    }
-    res.json(results); // [{ color: 'Black', count: 12 }, ...]
-  });
-});
-
-app.get('/api/products/price-range', (req, res) => {
-  db.query('SELECT MIN(price) AS min, MAX(price) AS max FROM products', (err, results) => {
-    if (err) return res.status(500).json({ error: 'Ошибка получения диапазона цен' });
-    res.json(results[0]);
-  });
-});
-
-app.get('/api/products/:id', (req, res) => {
-  const productId = req.params.id;
-  db.query('SELECT * FROM products WHERE id = ?', [productId], (err, results) => {
-    if (err) {
-      console.error('Ошибка получения товара:', err);
-      res.status(500).json({ error: 'Ошибка сервера' });
-    } else if (results.length === 0) {
-      res.status(404).json({ error: 'Товар не найден' });
-    } else {
-      res.json(results[0]);
-    }
-  });
-});
-
 
 // Запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
