@@ -258,6 +258,14 @@ body {
     gap: 6px;
 }
 
+#edit-description {
+  resize: vertical; /* Разрешаем растягивание только по вертикали */
+  min-height: 80px;
+  max-height: 200px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .btn-edit {
     background-color: #000;
     color: #fff;

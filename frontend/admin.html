@@ -45,7 +45,9 @@
           <th>Описание</th>
           <th>Изображение</th>
           <th>Управление</th>
-          <th> <button class="btn-add" onclick="openModal()">+</button> </th>
+          <th>
+            <button class="btn-add" onclick="openAddModal()">+</button>
+          </th>          
         </tr>
       </thead>
       <tbody id="products-table-body">
@@ -78,13 +80,17 @@
               <input type="text" id="edit-name" name="name" placeholder="Введите название">
             </div>
             <div class="form-group">
-              <label for="edit-category">Категория</label>
-              <input type="text" id="edit-category" name="category" placeholder="Введите категорию">
-            </div>
-            <div class="form-group">
-              <label for="edit-size">Размер</label>
-              <input type="text" id="edit-size" name="size" placeholder="Введите размер">
-            </div>
+  <label>Категория</label>
+  <select id="edit-category" required>
+    <option value="">Загрузка...</option>
+  </select>
+</div>
+<div class="form-group">
+  <label>Размер</label>
+  <select id="edit-size" required>
+    <option value="">Загрузка...</option>
+  </select>
+</div>
             <div class="form-group">
               <label for="edit-price">Цена</label>
               <input type="number" id="edit-price" name="price" placeholder="Введите цену">
@@ -99,12 +105,10 @@
           </div>
         <!-- Блок для отображения изображения товара и кнопки изменения -->
         <div class="form-group">
-          <label for="edit-image">Изображение товара</label>
-          <div id="edit-image-container">
-            <img id="edit-image-preview" src="" alt="Предпросмотр изображения" />
-            <input type="file" id="edit-image-input" name="image" />
-          </div>
-        </div>
+  <label for="edit-image-path">Имя файла изображения<br><small>(из assets/img/)</small></label>
+  <input type="text" id="edit-image-path" placeholder="example.png" required>
+  <img id="edit-image-preview" src="" style="max-width:100px; display:block; margin-top:8px;">
+</div>
         </div>
       </div>
     </form>
@@ -162,6 +166,39 @@
 </div>
 </div>
 
+<!-- Модалка добавления -->
+<div id="add-modal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close add-close">&times;</span>
+    <h2>Добавить новый товар</h2>
+    <form id="add-form">
+      <div class="form-group"><label>Название</label><input type="text" id="add-name" name="name" required></div>
+      <div class="form-group">
+  <label>Категория</label>
+  <select id="add-category" name="category" required>
+    <option value="">Выберите категорию</option>
+  </select>
+</div>
+
+<div class="form-group">
+  <label>Размер</label>
+  <select id="add-size" name="size" required>
+    <option value="">Выберите размер</option>
+  </select>
+</div>
+
+      <div class="form-group"><label>Цена</label><input type="number" id="add-price" name="price" step="0.01" required></div>
+      <div class="form-group"><label>Описание</label><textarea id="add-description" name="description"></textarea></div>
+      <div class="form-group">
+        <label for="add-image-path">Имя файла изображения<br><small>(из assets/img/)</small></label>
+        <input type="text" id="add-image-path" placeholder="shortsblack.png" required>
+        <img id="add-image-preview" style="max-width:100px; display:block; margin-top:8px;">
+      </div>      
+      <button type="submit">Добавить</button>
+    </form>
+  </div>
+</div>
+
 <!-- Секция промокодов -->
 <div id="promo-list-section" style="display:none;">
   <h2>Промокоды</h2>
@@ -214,6 +251,7 @@
 <!-- Архив -->
 <div id="archive-list-section" style="display:none;">
   <h2>Архив</h2>
+  <input type="text" id="archive-search-input" class="form-control mb-3 search-input" placeholder="Поиск..." onkeyup="filterArchiveTable()">
   <table>
     <thead>
       <tr>
@@ -226,10 +264,24 @@
         <th>Доставка</th>
         <th>Товары</th>
         <th>Дата</th>
+        <th>Управление</th>
       </tr>
     </thead>
     <tbody id="archive-table-body"></tbody>
   </table>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <div class="modal-content">
+      <h3>Подтверждение удаления</h3>
+      <p>Вы действительно хотите удалить этот товар?</p>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-cancel">Отмена</button>
+      <button class="btn btn-danger">Удалить</button>
+    </div>
+  </div>
 </div>
 
   <script src="js/admin.js"></script>

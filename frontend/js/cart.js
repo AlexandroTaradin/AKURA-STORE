@@ -1,10 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
   const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
   const container = document.getElementById('cart-items');
-  const totalEl   = document.getElementById('cart-total');
+  const totalEl = document.getElementById('cart-total');
 
-  // сохраняем исходную сумму
   let currentTotal = 0;
+  let deleteIndex = null;
+
+  // Модальное окно
+  const deleteModal = document.getElementById("deleteModal");
+  const modalItemName = document.getElementById("modalItemName");
+  const cancelDeleteBtn = document.getElementById("cancelDelete");
+  const confirmDeleteBtn = document.getElementById("confirmDelete");
+
+  cancelDeleteBtn.addEventListener("click", () => {
+    deleteModal.style.display = "none";
+    deleteIndex = null;
+  });
+
+  confirmDeleteBtn.addEventListener("click", () => {
+    if (deleteIndex !== null) {
+      cartItems.splice(deleteIndex, 1);
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+      renderCart();
+      updateCartCounter();
+      deleteModal.style.display = "none";
+      deleteIndex = null;
+    }
+  });
 
   function renderCart() {
     container.innerHTML = '';
@@ -48,23 +70,20 @@ document.addEventListener('DOMContentLoaded', () => {
   window.updateQuantity = function (index, newQty) {
     newQty = parseInt(newQty);
     if (newQty < 1) {
-      if (confirm('Do you really want to remove an item from your cart?')) {
-        cartItems.splice(index, 1);
-      }
-    } else {
-      cartItems[index].quantity = newQty;
+      removeItem(index); // вызываем модальное удаление
+      return;
     }
 
+    cartItems[index].quantity = newQty;
     localStorage.setItem('cart', JSON.stringify(cartItems));
     renderCart();
+    updateCartCounter();
   };
 
   window.removeItem = function (index) {
-    if (confirm('Do you really want to remove an item from your cart?')) {
-      cartItems.splice(index, 1);
-      localStorage.setItem('cart', JSON.stringify(cartItems));
-      renderCart();
-    }
+    deleteIndex = index;
+    modalItemName.textContent = cartItems[index].name;
+    deleteModal.style.display = "flex";
   };
 
   window.applyPromo = async function () {
@@ -81,11 +100,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         throw new Error('Ошибка сервера');
       }
-      const { discount } = await res.json(); // например { discount: 10.00 }
+      const { discount } = await res.json();
 
       const discountedTotal = currentTotal * (1 - discount / 100);
-
-      // Показываем зачёркнутую старую цену и новую со скидкой
       totalEl.innerHTML = `
         <span style="text-decoration: line-through;">
           ${currentTotal.toFixed(2)} €
@@ -100,5 +117,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  function updateCartCounter() {
+    const cartCount = document.getElementById("cartCount");
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+    if (cartCount) {
+      if (totalItems > 0) {
+        cartCount.style.display = "flex";
+        cartCount.textContent = totalItems;
+      } else {
+        cartCount.style.display = "none";
+      }
+    }
+
+    localStorage.setItem("cartQty", totalItems);
+  }
+
   renderCart();
+  updateCartCounter();
 });

@@ -80,5 +80,30 @@ document.querySelector('.add-to-cart').addEventListener('click', () => {
   }
 
   localStorage.setItem('cart', JSON.stringify(cart));
-  alert('Added to cart!');
+  // alert('Added to cart!');
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const addToCartBtn = document.querySelector(".add-to-cart");
+  const cartCount = document.getElementById("cartCount");
+
+  // Храним количество в localStorage (или просто в переменной)
+  let cartQty = parseInt(localStorage.getItem("cartQty") || "0");
+
+  updateCartUI();
+
+  addToCartBtn.addEventListener("click", function () {
+    cartQty++;
+    localStorage.setItem("cartQty", cartQty);
+    updateCartUI();
+  });
+
+  function updateCartUI() {
+    if (cartQty > 0) {
+      cartCount.style.display = "flex";
+      cartCount.textContent = cartQty;
+    } else {
+      cartCount.style.display = "none";
+    }
+  }
 });

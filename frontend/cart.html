@@ -26,9 +26,10 @@
       <ul>
         <li><a href="about.html">About</a></li>
         <li><a href="contacts.html">Contact</a></li>
-<li><a href="login.html" id="loginLink">Login</a></li>
-
-        <li><a href="cart.html">🛒</a></li>
+        <li><a href="login.html" id="loginLink">Login</a></li>
+        <li style="position: relative;">
+        <a href="cart.html" id="cartIcon">🛒
+        <span id="cartCount">0</span></a>
       </ul>
     </nav>
   </header>
@@ -57,6 +58,17 @@
     </div>
   </main>
   
+  <div id="deleteModal" class="modal-overlay" style="display: none;">
+  <div class="modal-window">
+    <h2>Удалить товар</h2>
+    <p>Вы уверены, что хотите удалить <strong id="modalItemName">этот товар</strong> из корзины?</p>
+    <div class="modal-actions">
+      <button id="cancelDelete">Отмена</button>
+      <button id="confirmDelete" class="btn-delete">Удалить</button>
+    </div>
+  </div>
+</div>
+
 
   <!-- Футер -->
 <footer>
