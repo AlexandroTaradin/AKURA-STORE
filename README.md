@@ -26,7 +26,7 @@ https://github.com/AlexandroTaradin/AKURA-STORE
 
 4. Запуск сервера
 В терминале введите команды:
-cd backend
+cd backend и 
 node server.js
 
 5. Откройте клиентскую часть
